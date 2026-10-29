@@ -23,6 +23,14 @@ EXPECTED_COUNTS = [15, 15, 15, 15]
 
 FORBIDDEN = [
     "老夫",
+    "明堂",
+    "副署",
+    "银龟袋",
+    "内库使",
+    "御史台",
+    "钦此",
+    "河阴仓",
+    "厢军",
     "太子年轻",
     "儿臣这个太子",
     "长史司",
@@ -145,9 +153,11 @@ def main() -> int:
     else:
         final_text = FINAL.read_text(encoding="utf-8")
         final_count = chars(final_text)
-        print(f"合并稿：{final_count} 字")
-        if final_count != total:
-            warnings.append(f"合并稿字数 {final_count} 与分卷合计 {total} 不一致（标题行会造成少量差异）")
+        final_body = re.sub(r"^神探狄仁杰Ⅴ\s*", "", final_text, count=1)
+        final_body_count = chars(final_body)
+        print(f"合并稿：{final_count} 字（正文 {final_body_count} 字）")
+        if final_body_count != total:
+            problems.append(f"合并稿正文 {final_body_count} 字与分卷合计 {total} 不一致")
         final_chapters = chapters(final_text)
         if len(final_chapters) != 60:
             problems.append(f"合并稿章数为 {len(final_chapters)}，应为 60")
